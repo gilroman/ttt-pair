@@ -2,17 +2,17 @@
   (:require [tic-tac-toe-pair.rules :refer [get-winning-token is-game-over?]]))
 
 (def win-score 100)
-(def loose-score -100)
+(def lose-score -100)
 (def draw-score 0)
 
 (defn evaluate-board [board token]
     (cond
       (nil? (get-winning-token board)) draw-score
       (= token (get-winning-token board)) win-score
-      (not (token (get-winning-token board)))loose-score))
+      (not (token (get-winning-token board)))lose-score))
 
 (defn get-board-score [board depth token is-maximizing] 
-(if is-maximizing
+  (if is-maximizing
     (- (evaluate-board board token) depth)
     (+ (evaluate-board board token) depth)))
 

@@ -110,7 +110,7 @@
 (defn build-congratulations-message [winning-token]
   (str "Congratulations! " (keyword-to-token winning-token) " won the game!"))
 
-(defn build-loosing-message [winning-token]
+(defn build-losing-message [winning-token]
   (str "Sorry! " (keyword-to-token winning-token) " won the game!"))
 
 (defn prompt-for-player-mark [] 
