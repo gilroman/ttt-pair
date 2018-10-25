@@ -116,6 +116,9 @@
 (defn prompt-for-player-mark [] 
     (str "Choose your mark on the board: (X or O)"))
 
+(defn prompt-for-player-turn []
+    (str "Would you like to play first or second: (1 or 2)"))
+
 (defn- is-mark-input-valid? [input] 
   (cond
     (= "X" input) true
@@ -145,3 +148,29 @@
        (read-player-mark-input)
        (catch clojure.lang.ExceptionInfo e
          (get-player-mark game (str "Invalid mark. ")))))))
+
+(defn- is-player-turn-input-valid? [input] 
+  (cond
+    (= 1 input) true
+    (= 2 input) true
+    :else false))
+
+(defn read-player-turn-input []
+  (let [input (read-string (read-line))]
+    (if (is-player-turn-input-valid? input) input
+      (throw (ex-info "You've entered an invalid turn choice." {})))))
+
+(defn get-player-turn
+  ([game] (get-player-turn game (str "")))
+  ([game message]
+    (do
+      (draw-intro game)
+      (println (str message (prompt-for-player-turn)))
+      (try 
+        (read-player-turn-input)
+        (catch clojure.lang.ExceptionInfo e
+          (get-player-turn game (str "Invalid turn choice. ")))
+        (catch java.lang.NumberFormatException e
+          (get-player-turn game (str "Invalid turn choice. ")))
+        (catch java.lang.RuntimeException e
+          (get-player-turn game (str "Invalid turn choice. ")))))))
