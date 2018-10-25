@@ -6,19 +6,24 @@
               [draw-intro draw-main get-move-location get-player-mark keyword-to-token build-congratulations-message build-losing-message]]))
 
 (def default-game 
-  {:current-token :player-1-token
+  {:current-token nil
    :player-1-token nil
    :player-2-token nil
    :board [nil nil nil nil nil nil nil  nil nil]})
+
+(defn set-current-token [turn game] 
+    (assoc game :current-token (if (= 1 turn) :player-1-token :player-2-token)))
 
 (defn set-player-tokens [player-1-token game]
   (assoc game 
     :player-1-token player-1-token
     :player-2-token (if (= :x player-1-token) :o :x)))
 
-(defn initialize-game [game]
-  (let [player-mark (get-player-mark game)] 
-    (set-player-tokens player-mark game)))
+(defn initialize-game []
+  (let [player-1-mark (get-player-mark default-game)
+        player-turn (get-player-turn default-game)]
+    (set-current-token player-turn 
+      (set-player-tokens player-1-mark default-game))))
 
 (defn- update-current-player [game]
   (assoc game :current-token
