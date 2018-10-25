@@ -118,12 +118,7 @@
   (testing "it returns a string to congratulate the player with the :o token")
     (is (= "Congratulations! O won the game!"
       (build-congratulations-message :o))))
-
-  (deftest build-losing-message-test 
-    (testing "it returns a string to say sorry to the player with the :x token")
-      (is (= "Sorry! X won the game!"
-        (build-losing-message :x))))
-
+ 
 (deftest read-player-mark-input-test
   (testing "it returns :x if player enters X")
     (is (= :x 
