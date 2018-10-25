@@ -107,11 +107,8 @@
       (catch clojure.lang.ExceptionInfo e
         (get-move-location game (str "Unavailable entry. " (build-choose-move-string game)))))))
 
-(defn build-congratulations-message [winning-token]
-  (str "Congratulations! " (keyword-to-token winning-token) " won the game!"))
-
-(defn build-losing-message [winning-token]
-  (str "Sorry! " (keyword-to-token winning-token) " won the game!"))
+(defn build-congratulations-message [token]
+  (str "Congratulations! " (keyword-to-token token) " won the game!"))
 
 (defn prompt-for-player-mark [] 
     (str "Choose your mark on the board: (X or O)"))
