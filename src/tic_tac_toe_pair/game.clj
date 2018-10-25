@@ -3,7 +3,7 @@
             [tic-tac-toe-pair.computer-player :refer [get-ai-move]]
             [tic-tac-toe-pair.board :refer [fill-location]]
             [tic-tac-toe-pair.console :refer
-              [draw-intro draw-main get-move-location get-player-mark keyword-to-token build-congratulations-message build-losing-message]]))
+              [draw-intro draw-main get-move-location get-player-mark get-player-turn keyword-to-token build-congratulations-message build-losing-message]]))
 
 (def default-game 
   {:current-token nil
