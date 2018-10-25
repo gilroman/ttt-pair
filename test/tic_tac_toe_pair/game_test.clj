@@ -48,7 +48,7 @@
          :player-2-token :o
          :board [:x :o nil :x :o nil :x nil nil]})))
   (testing "it returns an appropriate message if player 2 wins")
-    (is (= "Congratulations! O won the game!"
+    (is (= "Sorry! O won the game!"
       (get-game-end-message
         {:current-token :player-2-token
          :player-1-token :x

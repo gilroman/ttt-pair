@@ -3,7 +3,7 @@
             [tic-tac-toe-pair.computer-player :refer [get-ai-move]]
             [tic-tac-toe-pair.board :refer [fill-location]]
             [tic-tac-toe-pair.console :refer
-              [draw-intro draw-main get-move-location get-player-mark get-player-turn keyword-to-token build-congratulations-message]]))
+              [draw-intro draw-main get-move-location get-player-mark keyword-to-token build-congratulations-message build-losing-message]]))
 
 (def default-game 
   {:current-token nil
@@ -46,10 +46,11 @@
 
 (defn get-game-end-message [game]
   (let [winner (get-winning-token (:board game))]
-    (if winner
-      (build-congratulations-message winner)
-      "This game ended in a tie!")))
-
+    (cond 
+      (nil? winner) "This game ended in a tie!"
+      (= (:player-1-token game) winner) (build-congratulations-message winner)
+      :else (build-losing-message winner))))
+      
 (defmulti get-move :current-token)
 (defmethod get-move :player-1-token [game]
   (get-move-location game))
