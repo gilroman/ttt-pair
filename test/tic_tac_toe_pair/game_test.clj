@@ -4,18 +4,18 @@
             [tic-tac-toe-pair.rules :refer [is-game-over? get-winning-token]]))
 
 (deftest initialize-game-test
-  (testing "returns a default game map with player-1-token set to :x,  player-2-token set to :o and current-token set to player-1-token if the player chooses X as their mark and 1 as their player turn")
+  (testing "returns a default game map with player-1-token set to :x and player-2-token set to :o if the player chooses X as their mark")
     (with-out-str (is (= {:current-token :player-1-token
             :player-1-token :x
             :player-2-token :o
             :board [nil nil nil nil nil nil nil nil nil]}
-      (with-in-str "X\n1\n" (initialize-game)))))
-  (testing "returns a default game map with player-1-token set to :x,  player-2-token set to :o and current-token set to player-1-token if the player chooses X as their mark and 1 as their player turn")
+      (with-in-str "X\n" (initialize-game default-game)))))
+  (testing "returns a default game map with player-1-token set to :o and player-2-token set to :x if the player chooses O as their mark")
     (with-out-str (is (= {:current-token :player-1-token
-            :player-1-token :x
-            :player-2-token :o
-            :board [nil nil nil nil nil nil nil nil nil]}
-      (with-in-str "X\n1\n" (initialize-game))))))
+          :player-1-token :o
+          :player-2-token :x
+          :board [nil nil nil nil nil nil nil nil nil]}
+      (with-in-str "O\n" (initialize-game default-game))))))
 
 (deftest update-game-test
   (testing "returns an updated game map if valid move input")
@@ -116,23 +116,3 @@
                                                 :player-1-token :x
                                                 :player-2-token :o
                                                 :board [nil nil nil nil nil nil nil nil nil]})))))
-
-(deftest set-current-token-test 
-  (testing "it returns a game with :current-token set to :player-1-token if given the number 1")
-  (is (= {:current-token :player-1-token
-    :player-1-token nil
-    :player-2-token nil
-    :board [nil nil nil nil nil nil nil  nil nil]} 
-    (set-current-token 1 {:current-token nil
-      :player-1-token nil
-      :player-2-token nil
-      :board [nil nil nil nil nil nil nil  nil nil]})))
-  (testing "it returns a game with :current-token set to :player-1-token if given the number 2")
-  (is (= {:current-token :player-2-token
-    :player-1-token nil
-    :player-2-token nil
-    :board [nil nil nil nil nil nil nil  nil nil]} 
-    (set-current-token 2 {:current-token nil
-      :player-1-token nil
-      :player-2-token nil
-      :board [nil nil nil nil nil nil nil  nil nil]}))))
