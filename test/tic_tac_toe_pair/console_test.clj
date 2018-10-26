@@ -164,38 +164,3 @@
          :player-1-token :x
          :player-2-token :o
          :board [nil nil nil nil nil nil nil nil nil]}))))))
-
-(deftest prompt-for-player-turn-test 
-  (testing "it returns a default string asking the player to choose if they want to play first or second")
-  (is (=  "Would you like to play first or second: (1 or 2)" 
-     (prompt-for-player-turn))))
-
-(deftest read-player-turn-input-test 
-  (testing "it returns the integer 1 if the player enters one")
-    (is (= 1 (with-in-str "1\n" (read-player-turn-input))))
-  (testing "it returns the integer 2 if the player enters two")
-    (is (= 2 (with-in-str "2\n" (read-player-turn-input))))
-  (testing "it throws a custom exception if the player enters three")
-    (is (thrown? clojure.lang.ExceptionInfo
-      (with-in-str "3"
-        (read-player-turn-input)))))
-
-(deftest get-player-turn-test 
-  (testing "it returns 1 if the player enters "1"")
-    (with-out-str (is (= 1 (with-in-str "1\n" 
-      (get-player-turn {:current-token nil
-                        :player-1-token nil
-                        :player-2-token nil
-                        :board [nil nil nil nil nil nil nil nil nil]})))))
-  (testing "it returns 2 if the player enters "2"")
-    (with-out-str (is (= 2 (with-in-str "2\n" 
-      (get-player-turn {:current-token nil
-                        :player-1-token nil
-                        :player-2-token nil
-                        :board [nil nil nil nil nil nil nil nil nil]})))))
-  (testing "it keeps asking the player if the player enters an invalid turn")
-    (with-out-str (is (= 1 (with-in-str "3\n1\n" 
-      (get-player-turn {:current-token nil
-                        :player-1-token nil
-                        :player-2-token nil
-                        :board [nil nil nil nil nil nil nil nil nil]}))))))
