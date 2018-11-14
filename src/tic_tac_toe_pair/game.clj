@@ -19,11 +19,13 @@
     :player-1-token player-1-token
     :player-2-token (if (= :x player-1-token) :o :x)))
 
-(defn initialize-game []
-  (let [player-1-mark (get-player-mark default-game)
+(defn initialize-game
+  ([] (let [player-1-mark (get-player-mark default-game)
         player-turn (get-player-turn default-game)]
     (set-current-token player-turn 
       (set-player-tokens player-1-mark default-game))))
+  ([player-turn player-1-mark] (set-current-token player-turn 
+    (set-player-tokens player-1-mark default-game))))
 
 (defn- update-current-player [game]
   (assoc game :current-token
@@ -57,6 +59,13 @@
 (defmethod get-move :player-2-token [game]
   (get-ai-move game))
 
+(defmulti get-api-move :current-token)
+(defmethod get-api-move :player-1-token [game location]
+  (update-game game location))
+(defmethod get-api-move :player-2-token [game]
+  (update-game game (get-ai-move game)))
+  
+
 (defn play [game] 
   (loop [history  [game]]
     (let [game (last history)]
@@ -66,3 +75,11 @@
           history)
         (let [new-game (update-game game (get-move game))]
          (recur (conj history new-game)))))))
+
+
+(defn add-game-over-and-message-keys-to-game-map [game]
+  (let [game-over (is-game-over? (:board game))]
+    (assoc game :game-over game-over 
+                :message (if game-over 
+                           (get-game-end-message game)
+                           nil))))

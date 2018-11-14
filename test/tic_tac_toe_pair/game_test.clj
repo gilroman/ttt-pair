@@ -3,6 +3,21 @@
             [tic-tac-toe-pair.game :refer :all]
             [tic-tac-toe-pair.rules :refer [is-game-over? get-winning-token]]))
 
+(deftest add-game-over-and-message-keys-to-game-map-test 
+  (testing "adds the keys game over and message to the default game map for use on the API response")
+    (let [initial-game-map  {:board [nil nil nil nil nil nil nil nil nil]
+                             :current-token :player-1-token
+                             :player-1-token :x
+                             :player-2-token :o}
+           expected-game-map {:board [nil nil nil nil nil nil nil nil nil]
+                              :current-token :player-1-token
+                              :game-over false
+                              :message nil
+                              :player-1-token :x
+                              :player-2-token :o}]
+      (is (= expected-game-map (add-game-over-and-message-keys-to-game-map 
+        initial-game-map)))))
+
 (deftest initialize-game-test
   (testing "returns a default game map with player-1-token set to :x,  player-2-token set to :o and current-token set to player-1-token if the player chooses X as their mark and 1 as their player turn")
     (with-out-str (is (= {:current-token :player-1-token

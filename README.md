@@ -14,6 +14,10 @@ A functional programming style implementation of Impossible TTT on the command l
 * Run the program with the `lein run` command.
 * Follow on-screen instructions for gameplay.
 
+#### Running API Server
+
+* Run the server with the `lein ring server` command.
+
 #### Testing
 
 * For unit tests run the `lein test-refresh` command.
