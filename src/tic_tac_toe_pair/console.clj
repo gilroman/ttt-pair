@@ -1,8 +1,8 @@
-(ns tic-tac-toe-pair.console 
+(ns tic-tac-toe-pair.console
   (:require [clojure.string :as s]
             [tic-tac-toe-pair.rules :refer [is-move-valid?]]))
 
-(def board-shape 
+(def board-shape
   (str "          |     |     \n"
        "       0  |  1  |  2  \n"
        "          |     |     \n"
@@ -33,7 +33,7 @@
       filled-board
       (recur (inc square-pos) (replace-square-position filled-board board square-pos)))))
 
-(defn draw-board [board] 
+(defn draw-board [board]
   (println (build-board board)))
 
 (defn- clear-terminal []
@@ -52,7 +52,7 @@
   (println "---------------------------\n"))
 
 (defn draw-intro [game]
-  (do 
+  (do
     (clear-terminal)
     (draw-header)
     (println "\n")
@@ -68,16 +68,16 @@
     (println message)
     (draw-footer)))
 
-(defn build-current-player-string [game] 
+(defn build-current-player-string [game]
   (if (= :player-1-token (:current-token game))
     "Player 1's move!"
     "Player 2's move!"))
 
 (defn- get-index-adjusted-input [] (dec (Integer/parseInt (read-line))))
 
-(defn get-player-move [game] 
+(defn get-player-move [game]
   (let [input (get-index-adjusted-input)]
-    (if (is-move-valid? (:board game) input) 
+    (if (is-move-valid? (:board game) input)
       input
       (throw (ex-info "You've entered an invalid move." {})))))
 
@@ -100,9 +100,9 @@
     (do
       (draw-main game (build-current-player-string game))
       (println message))
-    (try 
+    (try
       (get-player-move game)
-      (catch NumberFormatException e 
+      (catch NumberFormatException e
         (get-move-location game (str "Invalid entry. " (build-choose-move-string game))))
       (catch clojure.lang.ExceptionInfo e
         (get-move-location game (str "Unavailable entry. " (build-choose-move-string game)))))))
@@ -113,13 +113,13 @@
 (defn build-losing-message [winning-token]
   (str "Sorry! " (keyword-to-token winning-token) " won the game!"))
 
-(defn prompt-for-player-mark [] 
+(defn prompt-for-player-mark []
     (str "Choose your mark on the board: (X or O)"))
 
 (defn prompt-for-player-turn []
     (str "Would you like to play first or second: (1 or 2)"))
 
-(defn- is-mark-input-valid? [input] 
+(defn- is-mark-input-valid? [input]
   (cond
     (= "X" input) true
     (= "x" input) true
@@ -132,24 +132,24 @@
     (or (= "X" input) (= "x" input)) :x
     (or (= "O" input) (= "o" input)) :o))
 
-(defn read-player-mark-input [] 
+(defn read-player-mark-input []
   (let [input (read-line)]
     (if (is-mark-input-valid? input)
       (mark-input-to-keyword input)
       (throw (ex-info "You've entered an invalid mark." {})))))
 
-(defn get-player-mark 
+(defn get-player-mark
   ([game] (get-player-mark game (str "")))
-  ([game message] 
+  ([game message]
    (do
      (draw-intro game)
      (println (str message (prompt-for-player-mark)))
-     (try 
+     (try
        (read-player-mark-input)
        (catch clojure.lang.ExceptionInfo e
          (get-player-mark game (str "Invalid mark. ")))))))
 
-(defn- is-player-turn-input-valid? [input] 
+(defn- is-player-turn-input-valid? [input]
   (cond
     (= 1 input) true
     (= 2 input) true
@@ -166,7 +166,7 @@
     (do
       (draw-intro game)
       (println (str message (prompt-for-player-turn)))
-      (try 
+      (try
         (read-player-turn-input)
         (catch clojure.lang.ExceptionInfo e
           (get-player-turn game (str "Invalid turn choice. ")))

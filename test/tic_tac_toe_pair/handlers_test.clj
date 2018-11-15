@@ -11,14 +11,14 @@
   (testing "not-found route"
     (let [response (app (mock/request :get "/invalid"))]
       (is (= 404 (:status response))))))
-  
-(deftest player-endpoint-test
-  (testing "the /player endpoint"
+
+(deftest game-endpoint-test
+  (testing "the /game endpoint"
     (testing "when provided with a valid JSON body"
       (let [player-info-map {:player-turn 1
                              :player-1-mark :x}
             player-info-json (json/encode player-info-map)
-            response (app (-> (mock/request :post "/player" player-info-json)
+            response (app (-> (mock/request :post "/game" player-info-json)
                               (mock/content-type "application/json")))]
         (testing "returns a 200 status"
           (is (= 200 (:status response)))
@@ -32,7 +32,7 @@
                 expected-response-json (json/encode expected-response-map)]
             (is (= expected-response-json (:body response))))))))
     (testing "when provided with invalid JSON"
-      (let [response (app (-> (mock/request :post "/player" "*@!")
+      (let [response (app (-> (mock/request :post "/game" "*@!")
                               (mock/content-type "application/json")))]
         (testing "returns a 400 status"
           (is (= 400 (:status response))))))))
@@ -46,7 +46,7 @@
                              :player-2-token :o
                              :board [nil nil nil nil nil nil nil nil nil]
                              :game-over nil
-                             :message nil}} 
+                             :message nil}}
             move-json (json/encode move-map)
             response  (app (-> (mock/request :post "/move" move-json)
                                (mock/content-type "application/json")))
@@ -64,7 +64,7 @@
                               :player-2-token :o
                               :board [:x :o nil :x :o nil :x nil nil]
                               :game-over nil
-                              :message nil}} 
+                              :message nil}}
             move-json (json/encode move-map)
             response  (app (-> (mock/request :post "/move" move-json)
                                 (mock/content-type "application/json")))]
