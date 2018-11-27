@@ -4,7 +4,7 @@
             [ring.util.response :as ring-response]
             [tic-tac-toe-pair.game :refer
              [add-game-over-and-message-keys-to-game-map get-api-move initialize-game]]
-            [tic-tac-toe-pair.rules :refer [is-move-valid?]]))
+            [tic-tac-toe-pair.board :refer [is-location-available?]]))
 
 (defn- keywordize-game-vals [game]
   (assoc game :current-token (keyword (:current-token game))
@@ -18,20 +18,16 @@
           game (get request-body "game")
           keywordized-game (keywordize-game-vals (walk/keywordize-keys game))
           location (get-in request-body ["move" "location"])
-          board (:board keywordized-game)
-          move-valid? (is-move-valid? board location)]
-      
+          board (:board keywordized-game)]
       (cond
-        (not (contains? [0 1 2 3 4 5 6 7 8 9] location)) (-> (ring-response/response "")
-                                                             (ring-response/status 500))
-        (not move-valid?) (-> (ring-response/response {})
-                              (ring-response/status 400))
+        (not (is-location-available? board location)) (->  
+                                                       (ring-response/response {:body (assoc keywordized-game :message "Invalid move.")})  (ring-response/status 400))
         :else             
-          (let [game-with-player-move    
-                      (add-game-over-and-message-keys-to-game-map
-                            (get-api-move keywordized-game location))
-                computer-turn?  (= :player-2-token (:current-token
-                                                          game-with-player-move))]
+        (let [game-with-player-move    
+              (add-game-over-and-message-keys-to-game-map
+               (get-api-move keywordized-game location))
+              computer-turn?  (= :player-2-token (:current-token
+                                                  game-with-player-move))]
           (if (and computer-turn? (not (:game-over game-with-player-move)))
             (let [game-with-ai-move (get-api-move game-with-player-move)]
               (-> (ring-response/response

@@ -108,8 +108,8 @@
           (is (= 200 (:status response))))
     )))
 
-(deftest tied-game-test
-  (testing "move endpoint can handle tied game"
+(deftest location-taken-test
+  (testing "move endpoint can handle a location taken"
     (let [move-map {:move {:location 0}
                     :game {:current-token :player-1-token
                            :player-1-token :x
@@ -119,7 +119,9 @@
                            :message nil}}
           move-json (json/encode move-map)
           response  (app (-> (mock/request :post "/move" move-json)
-                             (mock/content-type "application/json")))]
-        (testing "returns a 400 status"
-          (is (= 400 (:status response))))
-      )))
+                             (mock/content-type "application/json")))
+          message-on-response (get-in (json/decode (:body response)) ["body" "message"])]
+      (testing "returns a 400 status"
+        (is (= 400 (:status response))))
+      (testing "message key on JSON response says Invalid"
+        (is (= "Invalid move." message-on-response))))))

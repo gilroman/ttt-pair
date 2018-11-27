@@ -77,9 +77,12 @@
          (recur (conj history new-game)))))))
 
 
-(defn add-game-over-and-message-keys-to-game-map [game]
-  (let [game-over (is-game-over? (:board game))]
-    (assoc game :game-over game-over
-                :message (if game-over
-                           (get-game-end-message game)
-                           nil))))
+(defn add-game-over-and-message-keys-to-game-map
+  ([game] (let [game-over (is-game-over? (:board game))
+                game-with-game-over-key (assoc game :game-over game-over)] 
+            (add-game-over-and-message-keys-to-game-map 
+               game-with-game-over-key (if game-over
+                      (get-game-end-message game)
+                      nil))))
+  ([game message]
+     (assoc game :message message)))
