@@ -31,6 +31,17 @@
                                        :message nil}
                 expected-response-json (json/encode expected-response-map)]
             (is (= expected-response-json (:body response))))))))
+        (testing "when provided with a valid JSON body and a player turn of 2nd"
+          (let [player-info-map {:player-turn 2
+                                  :player-1-mark :x}
+                player-info-json (json/encode player-info-map)
+                response (app (-> (mock/request :post "/game" player-info-json)
+                                  (mock/content-type "application/json")))
+                board-on-response (get (json/decode (:body response)) "board")]
+            (testing "returns a 200 status"
+              (is (= 200 (:status response))))
+            (testing "board has a move from the ai"
+              (is (= 1 (get (frequencies board-on-response) "o"))))))
     (testing "when provided with invalid JSON"
       (let [response (app (-> (mock/request :post "/game" "*@!")
                               (mock/content-type "application/json")))]
@@ -62,7 +73,7 @@
                       :game {:current-token :player-1-token
                               :player-1-token :x
                               :player-2-token :o
-                              :board [:x :o nil :x :o nil :x nil nil]
+                              :board [nil :o nil :x :o nil :x nil nil]
                               :game-over nil
                               :message nil}}
             move-json (json/encode move-map)
@@ -71,7 +82,7 @@
         (testing "returns a 200 status"
           (is (= 200 (:status response))))
         (testing "returns a board with game over true and a massage of who won the game"
-          (let [expected-response-map {:current-token :player-1-token
+          (let [expected-response-map {:current-token :player-2-token
                                         :player-1-token :x
                                         :player-2-token :o
                                         :board [:x :o nil :x :o nil :x nil nil]
@@ -79,3 +90,36 @@
                                         :message "Congratulations! X won the game!"}
                 expected-response-json (json/encode expected-response-map)]
                 (is (= expected-response-json (:body response))))))))
+
+(deftest tied-game-test
+  (testing "move endpoint can handle tied game"
+      (let [move-map {:move {:location 0}
+                      :game {:current-token :player-1-token
+                      :player-1-token :x
+                      :player-2-token :o
+                      :board [nil :o :o :o :x :x :x :x :o]
+                      :game-over nil
+                      :message nil}}
+            move-json (json/encode move-map)
+            response  (app (-> (mock/request :post "/move" move-json)
+                        (mock/content-type "application/json")))
+            board-on-response  (get (json/decode (:body response)) "board")]
+        (testing "returns a 200 status"
+          (is (= 200 (:status response))))
+    )))
+
+(deftest tied-game-test
+  (testing "move endpoint can handle tied game"
+    (let [move-map {:move {:location 0}
+                    :game {:current-token :player-1-token
+                           :player-1-token :x
+                           :player-2-token :o
+                           :board [:x nil nil nil nil nil nil nil nil]
+                           :game-over nil
+                           :message nil}}
+          move-json (json/encode move-map)
+          response  (app (-> (mock/request :post "/move" move-json)
+                             (mock/content-type "application/json")))]
+        (testing "returns a 400 status"
+          (is (= 400 (:status response))))
+      )))

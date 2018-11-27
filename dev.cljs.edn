@@ -1,0 +1,5 @@
+{:main tic-tac-toe-pair.main
+ :output-to "resources/public/js/compiled/dev-main.js"
+ :output-dir "resources/public/js/compiled/out/test"
+ :optimizations :none}
+

@@ -18,6 +18,14 @@ A functional programming style implementation of Impossible TTT on the command l
 
 * Run the server with the `lein ring server` command.
 
+#### Running Clojurescript Front End App
+
+* Run the clojurescript app with the `lein build-dev` command.
+
 #### Testing
 
-* For unit tests run the `lein test-refresh` command.
+* For unit tests of the API and main Console application run the `lein test-refresh` command.
+* For unit tests of the Front End:
+  1. Make sure to run the command `npm install` or `yarn install` to download the necessary karma dependencies.
+  2. Start the Karma server with the command `lein doo chrome-headless test` command.
+  3. To show the test results save the `main_test.cljs` file once.

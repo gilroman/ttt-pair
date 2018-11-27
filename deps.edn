@@ -1,0 +1,9 @@
+{:deps {com.bhauman/figwheel-main {:mvn/version "0.1.9"}
+        com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
+        compojure {:mvn/version "1.6.1"}
+        ring/ring-core {:mvn/version "1.7.1"}
+        ring/ring-json {:mvn/version "0.5.0-beta1"}
+        ring/ring-defaults {:mvn/version "0.3.2"}
+        reagent {:mvn/version "0.8.1"}
+        cljs-http {:mvn/version "0.1.45"}}
+ :paths ["src/cljs" "test/cljs" "src/clj" "target" "resources"]}

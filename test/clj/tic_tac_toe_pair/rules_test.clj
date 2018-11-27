@@ -29,8 +29,8 @@
     (is (= :o (get-winning-token [:o :o :o :x :x nil :x nil nil])))
   (testing "returns the winning token if there is a diagonal winner")
     (is (= :o (get-winning-token [:o :x :o :x :o nil :x nil :o]))))
-    
-(deftest is-game-over?-test 
+
+(deftest is-game-over?-test
   (testing "returns false if the game is not over")
     (is (= false (is-game-over? [nil nil nil nil nil nil nil nil nil])))
   (testing "returns true if the game board is full")
