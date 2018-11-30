@@ -203,6 +203,11 @@ header {
     transition: border 0.25s ease-in, color 0.25s ease-in;
 }
 
+.modal__new-game-button:hover {
+    border: 1px solid #222222;
+    color: #222222;
+}
+
 .modal--hidden {
     visibility: hidden;
 }
