@@ -2,18 +2,24 @@
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [reagent.core :as reagent :refer [atom]]
             [cljs-http.client :as http]
-            [cljs.core.async :refer [<!]]))
+            [cljs.core.async :refer [<!]]
+            [tic-tac-toe-pair.header :refer [header]]
+            [tic-tac-toe-pair.board-cljs :refer [board]]
+            [tic-tac-toe-pair.modal :refer [game-ending-modal]]
+            [tic-tac-toe-pair.player-options :refer [player-options]]))
 
 (enable-console-print!)
 
 (def localhost-address "http://localhost:3449")
 
-(defonce app-state (atom {:text "Tic Tac Toe"
-                          :player {
-                            :player-turn nil
-                            :player-1-mark nil
-                          }
-                          :game {}}))
+(def initial-game-state {:text "Tic Tac Toe"
+                         :player {:player-turn nil
+                                  :player-1-mark nil}
+                         :game {}
+                         :modal-hidden false
+                         :loading false})
+
+(defonce app-state (atom initial-game-state))
 
 (defn update-game [game]
   (swap! app-state #(assoc % :game game)))
@@ -26,36 +32,12 @@
                          {:with-credentials? false
                           :json-params request-body}))]
       (update-game (:body response))))))
-
-(defn cell-button [cell-number]
-  [:button {:class "board__cell-button" :on-click (fn [] (post-move cell-number))}])
-
-(defn cell-mark [mark]
-  [:div {:class "board__cell-mark"} 
-    [:div mark]])
-
-(defn board-cell [cell-number cell-value]
-  (if (nil? cell-value)
-    [cell-button cell-number]
-    [cell-mark cell-value]))
-
-(defn board [board-array]
-    [:div {:class "board"}
-      (doall
-        (map-indexed 
-          (fn [index item]
-            ^{:key index}  
-            [:div {:class "board__cell"} [board-cell index item]]) board-array))])
           
-(def update-player-turn
-  (fn [turn]
-    (do
-      (swap! app-state #(assoc-in % [:player :player-turn] turn)))))
+(defn update-player-turn [turn]
+      (swap! app-state #(assoc-in % [:player :player-turn] turn)))
 
-(def update-player-mark
-  (fn [mark]
-    (do 
-      (swap! app-state #(assoc-in % [:player :player-1-mark] mark)))))
+(defn update-player-mark [mark]
+      (swap! app-state #(assoc-in % [:player :player-1-mark] mark)))
 
 (def post-player (fn []
     (go
@@ -65,49 +47,35 @@
                             :json-params request-body}))]
         (update-game (:body response))))))
 
-(defn player-options-choose-mark []
-  [:div {:class "card__section"}
-   [:p "Choose a mark:"]
-   [:div
-     [:button {:class "card__menu-button" :on-click (fn [] (update-player-mark :x))} "x"]
-     [:button {:class "card__menu-button" :on-click (fn [] (update-player-mark :o))} "o"]]])
+(defn show-loader []
+    (swap! app-state assoc :loading? true))
 
-(defn player-options-choose-turn []
-  [:div {:class "card__section"}
-   [:p "Choose your turn:"]
-   [:button {:class "card__menu-button" :on-click (fn [] (update-player-turn 1))} "1"]
-   [:button {:class "card__menu-button" :on-click (fn [] (update-player-turn 2))} "2"]])
+(defn hide-modal []
+  (swap! app-state assoc :modal-hidden true))
 
-(defn player-options-start-button []
-  [:div
-    [:button {:class "card__start-button" :on-click post-player} "START"]])
+(defn start-new-game [] (swap! app-state (fn [] initial-game-state)))
 
-(defn player-options []
-  [:div {:class "player-options-container"}
-    [player-options-choose-mark]
-    [player-options-choose-turn]
-    [player-options-start-button]])
-
-(defn game-ending-message []
-  [:div {:class "message"} (get-in @app-state [:game :message])])
-
-(defn header [text]
-  [:header
-    [:h1 (:text @app-state)]])
 
 (defn tic-tac-toe []
   (let [game-over?           (get-in @app-state [:game :game-over])
         show-player-options? (empty? (:game @app-state))
         header-text          (:text @app-state)
-        board-state          (get-in @app-state [:game :board])]
+        board-state          (get-in @app-state [:game :board])
+        player-state         (:player @app-state)
+        modal-message        (get-in @app-state [:game :message])
+        modal-hidden?        (:modal-hidden @app-state)
+        loading?             (:loading? @app-state)]
   [:div
    [header header-text]
    [:div {:class "game-container"}
-    [:div {:class "card"}
-      (if show-player-options? 
-        [player-options]
-        [:div {:class "board-container"} [board board-state]])
-      (when game-over? [game-ending-message])]]]))
+     [:div {:class "card"}
+       (if show-player-options? 
+         [player-options player-state loading? post-player show-loader 
+          update-player-mark update-player-turn]
+         [:div {:class "board-container"} 
+          [board board-state post-move] 
+          (when game-over? [game-ending-modal modal-message modal-hidden? 
+                            hide-modal start-new-game])])]]]))
 
 (reagent/render-component [tic-tac-toe]
                           (. js/document (getElementById "app")))
