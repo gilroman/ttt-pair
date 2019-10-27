@@ -9,3 +9,12 @@ pom.xml.asc
 /.nrepl-port
 .hgignore
 .hg/
+/resources/public/js/compiled/**
+figwheel_server.log
+.rebel_readline_history
+/resources/public/js/compiled/**
+figwheel_server.log
+/node_modules
+.cpcache
+yarn-error.log
+/out

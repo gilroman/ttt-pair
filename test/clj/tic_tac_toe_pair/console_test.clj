@@ -4,7 +4,7 @@
 
 (deftest draw-board-test
   (testing "it draws an empty board to the console")
-    (is (= 
+    (is (=
       (str "          |     |     \n"
            "          |     |     \n"
            "          |     |     \n"
@@ -19,7 +19,7 @@
       (with-out-str
         (draw-board [nil nil nil nil nil nil nil nil nil]))))
   (testing "it draws a populated board to the console")
-    (is (= 
+    (is (=
       (str "          |     |     \n"
            "          |  X  |     \n"
            "          |     |     \n"
@@ -36,7 +36,7 @@
 
 (deftest get-move-location-test
   (testing "it returns an integer that is adjusted to match the zero-indexed board")
-    (with-out-str (is 
+    (with-out-str (is
       (= 4 (with-in-str "5"
         (get-move-location
           {:current-token :player-2-token
@@ -44,7 +44,7 @@
             :player-2-token :o
             :board [:x nil nil nil nil nil nil nil nil]})))))
   (testing "it continues requesting input until it's valid")
-    (with-out-str (is 
+    (with-out-str (is
       (= 4 (with-in-str "20\n5"
         (get-move-location
           {:current-token :player-2-token
@@ -54,15 +54,15 @@
 
 (deftest read-move-input-test
   (testing "it returns an an integer if input is valid")
-    (is (= 5 
-      (with-in-str "6" 
+    (is (= 5
+      (with-in-str "6"
         (get-player-move {:current-token :player-2-token
                           :player-1-token :x
                           :player-2-token :o
                           :board [:x nil nil nil nil nil nil nil nil]}))))
   (testing "it throws a NumberFormatException if input is not integer")
-    (is (thrown? NumberFormatException 
-      (with-in-str "a" 
+    (is (thrown? NumberFormatException
+      (with-in-str "a"
         (get-player-move {:current-token :player-2-token
                           :player-1-token :x
                           :player-2-token :o
@@ -75,9 +75,9 @@
                           :player-2-token :o
                           :board [:x nil nil nil nil nil nil nil nil]})))))
 
-(deftest draw-player-info-test 
+(deftest draw-player-info-test
   (testing "it returns a string with the player names and tokens")
-    (is (= "Player 1 (X)     Player 2 (O)\n" 
+    (is (= "Player 1 (X)     Player 2 (O)\n"
       (with-out-str (draw-player-info :x :o)))))
 
 (deftest build-current-player-string-test
@@ -111,7 +111,7 @@
          :player-2-token :o
          :board [:x :o nil :x :x nil :o nil nil]}))))
 
-(deftest build-congratulations-message-test 
+(deftest build-congratulations-message-test
   (testing "it returns a string to congratulate the player with the :x token")
     (is (= "Congratulations! X won the game!"
       (build-congratulations-message :x)))
@@ -119,58 +119,58 @@
     (is (= "Congratulations! O won the game!"
       (build-congratulations-message :o))))
 
-  (deftest build-losing-message-test 
+  (deftest build-losing-message-test
     (testing "it returns a string to say sorry to the player with the :x token")
       (is (= "Sorry! X won the game!"
         (build-losing-message :x))))
 
 (deftest read-player-mark-input-test
   (testing "it returns :x if player enters X")
-    (is (= :x 
-      (with-in-str "X" 
+    (is (= :x
+      (with-in-str "X"
         (read-player-mark-input))))
   (testing "it returns :x if player enters X")
-    (is (= :x 
-      (with-in-str "x" 
+    (is (= :x
+      (with-in-str "x"
           (read-player-mark-input))))
     (testing "it returns :o if player enters O")
-    (is (= :o 
-      (with-in-str "O" 
+    (is (= :o
+      (with-in-str "O"
         (read-player-mark-input))))
     (testing "it throws a custom exception if input is not a case insensitive X or O")
     (is (thrown? clojure.lang.ExceptionInfo
       (with-in-str "1"
         (read-player-mark-input)))))
 
-(deftest prompt-for-player-mark-test 
+(deftest prompt-for-player-mark-test
   (testing "it returns a default string asking the player to choose the mark they want to use")
-  (is (= "Choose your mark on the board: (X or O)" 
+  (is (= "Choose your mark on the board: (X or O)"
     (prompt-for-player-mark))))
 
-(deftest get-player-mark-test 
+(deftest get-player-mark-test
   (testing "it returns :x if the player enters x")
-  (with-out-str (is (= :x 
-    (with-in-str "x" 
-      (get-player-mark 
+  (with-out-str (is (= :x
+    (with-in-str "x"
+      (get-player-mark
         {:current-token :player-2-token
          :player-1-token :x
          :player-2-token :o
          :board [nil nil nil nil nil nil nil nil nil]})))))
   (testing "it keeps asking the player for a mark if the player enters an invalid mark")
-  (with-out-str (is (= :x 
-    (with-in-str "1\nX" 
-      (get-player-mark 
+  (with-out-str (is (= :x
+    (with-in-str "1\nX"
+      (get-player-mark
         {:current-token :player-2-token
          :player-1-token :x
          :player-2-token :o
          :board [nil nil nil nil nil nil nil nil nil]}))))))
 
-(deftest prompt-for-player-turn-test 
+(deftest prompt-for-player-turn-test
   (testing "it returns a default string asking the player to choose if they want to play first or second")
-  (is (=  "Would you like to play first or second: (1 or 2)" 
+  (is (=  "Would you like to play first or second: (1 or 2)"
      (prompt-for-player-turn))))
 
-(deftest read-player-turn-input-test 
+(deftest read-player-turn-input-test
   (testing "it returns the integer 1 if the player enters one")
     (is (= 1 (with-in-str "1\n" (read-player-turn-input))))
   (testing "it returns the integer 2 if the player enters two")
@@ -180,21 +180,21 @@
       (with-in-str "3"
         (read-player-turn-input)))))
 
-(deftest get-player-turn-test 
+(deftest get-player-turn-test
   (testing "it returns 1 if the player enters "1"")
-    (with-out-str (is (= 1 (with-in-str "1\n" 
+    (with-out-str (is (= 1 (with-in-str "1\n"
       (get-player-turn {:current-token nil
                         :player-1-token nil
                         :player-2-token nil
                         :board [nil nil nil nil nil nil nil nil nil]})))))
   (testing "it returns 2 if the player enters "2"")
-    (with-out-str (is (= 2 (with-in-str "2\n" 
+    (with-out-str (is (= 2 (with-in-str "2\n"
       (get-player-turn {:current-token nil
                         :player-1-token nil
                         :player-2-token nil
                         :board [nil nil nil nil nil nil nil nil nil]})))))
   (testing "it keeps asking the player if the player enters an invalid turn")
-    (with-out-str (is (= 1 (with-in-str "3\n1\n" 
+    (with-out-str (is (= 1 (with-in-str "3\n1\n"
       (get-player-turn {:current-token nil
                         :player-1-token nil
                         :player-2-token nil

@@ -3,7 +3,7 @@
 (defn is-full? [board]
   (not (some nil? board)))
 
-(defn is-location-available? [board location] 
+(defn is-location-available? [board location]
   (nil? (get board location)))
 
 (defn is-location-valid? [board location]
